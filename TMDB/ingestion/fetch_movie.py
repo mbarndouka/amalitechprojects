@@ -3,7 +3,9 @@ from api import TMDB
 from dotenv import load_dotenv
 import os
 import time
+import logging
 
+logging.basicConfig(level=logging.INFO)
 load_dotenv()
 token = os.getenv("access_token")
 
@@ -21,7 +23,7 @@ def fetch_movie():
             time.sleep(0.2)
             movies.append(movie)
         except Exception as e:
-            print(f"Error fetching movie with ID {movie_id}: {e}")
+            logging.error(f"Error fetching movie with ID {movie_id}: {e}")
     
     df = pd.DataFrame(movies)
     os.makedirs(os.path.dirname(RAW_DATA_PATH), exist_ok=True)
