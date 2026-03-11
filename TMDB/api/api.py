@@ -5,8 +5,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 base_url = os.getenv("URL")
-api_key = os.getenv("TMDB_API_KEY")
-access_token = os.getenv("access_token")
 
 class TMDB:
     def __init__(self, access_token):
@@ -17,8 +15,8 @@ class TMDB:
         }
 
 
-    def get_movies(self, movie_ids):
-        url = f"{self.url}/{{movie_id}}"
+    def get_movies(self, movie_id):
+        url = f"{self.url}/{movie_id}"
         response = requests.get(url, headers=self.headers)
         # Check if the request was successful
         response.raise_for_status()
