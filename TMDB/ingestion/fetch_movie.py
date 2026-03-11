@@ -2,6 +2,7 @@ import pandas as pd
 from api import TMDB
 from dotenv import load_dotenv
 import os
+import time
 
 load_dotenv()
 token = os.getenv("access_token")
@@ -14,6 +15,8 @@ def fetch_movie():
     for movie_id in movie_ids:
         try:
             movie = client.get_movies(movie_id)
+            # insert time delay here if needed to avoid hitting rate limits
+            time.sleep(0.2)
             movies.append(movie)
         except Exception as e:
             print(f"Error fetching movie with ID {movie_id}: {e}")
