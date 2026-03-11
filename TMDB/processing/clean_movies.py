@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 
 DROP_COLS = [
     "adult",
@@ -11,6 +12,8 @@ DROP_COLS = [
 
 FINAL_COLUMNS = ['id', 'title', 'tagline', 'release_date', 'genres', 'belongs_to_collection', 'original_language', 'budget_musd', 'revenue_musd', 'production_companies', 'production_countries', 'vote_count', 'vote_average', 'popularity', 'runtime', 'overview', 'spoken_languages', 'poster_path', 'cast', 'cast_size', 'director', 'crew_size'
 ]
+
+PROCESS_DATA_PATH = "data/processed/clean_movies.parquet"
 
 def extract_names(item):
     if isinstance(item, list) and len(item) > 0:
@@ -83,4 +86,8 @@ def clean_movies(df: pd.DataFrame) -> pd.DataFrame:
     # Reset index
     df = df.reset_index(drop=True)
     
+    # save cleaned DataFrame
+    os.makedirs(os.path.dirname(PROCESS_DATA_PATH), exist_ok=True)
+    df.to_parquet(PROCESS_DATA_PATH, index=False)
+
     return df
