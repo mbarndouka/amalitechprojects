@@ -5,7 +5,9 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 
 from ingestion.fetch_movie import fetch_movie
 from processing.clean_movies import clean_movies
+from analysis.kpi_analysis import compute_profit
 from visualization.plots import (
+    plot_roi_by_genre,
     plot_revenue_vs_budget,
     plot_popularity_vs_rating,
     plot_yearly_revenue_trends,
@@ -23,8 +25,11 @@ def run_pipeline():
     logging.info("Cleaning movie data...")
     cleaned_data = clean_movies(raw_data)
     
+    cleaned_data = compute_profit(cleaned_data)
+    
     # Step 3: Generate visualizations
     logging.info("Generating visualizations...")
+    plot_roi_by_genre(cleaned_data)
     plot_revenue_vs_budget(cleaned_data)
     plot_popularity_vs_rating(cleaned_data)
     plot_yearly_revenue_trends(cleaned_data)

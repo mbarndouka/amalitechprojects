@@ -6,13 +6,37 @@ FIGURE_DIR = "reports/figures"
 
 def _ensure_dir():
     os.makedirs(FIGURE_DIR, exist_ok=True)
+
+# ROI Distribution by Genre
+def plot_roi_by_genre(df: pd.DataFrame):
+
+    _ensure_dir()
+
+    df = df.dropna(subset=["roi", "genres"])
+
+    df = df.assign(genre=df["genres"].str.split("|")).explode("genre")
+
+    genre_roi = df.groupby("genre")["roi"].median().sort_values(ascending=False)
+
+    plt.figure(figsize=(12, 6))
+    genre_roi.plot(kind="bar")
+
+    plt.title("Median ROI by Genre")
+    plt.ylabel("ROI")
+    plt.xlabel("Genre")
+
+    plt.xticks(rotation=45)
+    plt.grid(axis="y")
+
+    plt.savefig(f"{FIGURE_DIR}/roi_by_genre.png", bbox_inches="tight")
+    plt.close()
     
 # Revenue vs budget
 def plot_revenue_vs_budget(df):
     _ensure_dir()
-    df = df.dropna(subset=["budget_msd", "revenue_msd"])
+    df = df.dropna(subset=["budget_musd", "revenue_musd"])
     plt.figure(figsize=(10, 6))
-    plt.scatter(df["budget_msd"], df["revenue_msd"], alpha=0.6)
+    plt.scatter(df["budget_musd"], df["revenue_musd"], alpha=0.6)
     plt.xlabel("Budget (Millions USD)")
     plt.ylabel("Revenue (Millions USD)")
     plt.title("Revenue vs Budget")
@@ -65,10 +89,10 @@ def plot_popularity_vs_rating(df):
 # Yearly Box Office Trends
 def plot_yearly_revenue_trends(df):
     _ensure_dir()
-    df = df.dropna(subset=["release_date", "revenue_msd"])
+    df = df.dropna(subset=["release_date", "revenue_musd"])
     
     df["year"] = pd.to_datetime(df["release_date"]).dt.year
-    yearly_revenue = df.groupby("year")["revenue_msd"].sum()
+    yearly_revenue = df.groupby("year")["revenue_musd"].sum()
     
     plt.figure(figsize=(12, 6))
     yearly_revenue.plot()

@@ -65,6 +65,7 @@ def clean_movies(df: pd.DataFrame) -> pd.DataFrame:
     df["overview"] = df["overview"].replace("", np.nan)
     df["tagline"] = df["tagline"].replace("", np.nan)
     
+    df = df.drop(columns=["origin_country"], errors='ignore')
     #remove duplicates
     df = df.drop_duplicates()
     
