@@ -90,10 +90,10 @@ def plot_franchise_vs_standalone(df):
     df["franchise"] = df["belongs_to_collection"].notna()
     
     comparison = df.groupby("franchise").agg(
-        mean_revenue=("revenue_msd", "mean"),
-        mean_rating=("vote_average", "mean"),
+        mean_revenue=("revenue_musd", "mean"),
+        mean_roi=("roi", "mean"),
         mean_popularity=("popularity", "mean"),
-        mean_rating =("vote_average", "mean")
+        mean_rating=("vote_average", "mean")
     )
     
     comparison.plot(kind="bar", figsize=(12, 6))
