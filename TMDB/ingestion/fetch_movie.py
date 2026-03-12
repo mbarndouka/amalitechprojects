@@ -6,15 +6,15 @@ import time
 import logging
 
 logging.basicConfig(level=logging.INFO)
-load_dotenv()
-token = os.getenv("access_token")
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
+# token = os.getenv("access_token")
 
-movie_ids = [0, 299534, 19995, 140607, 299536, 597, 135397, 420818, 24428, 168259, 99861, 284054, 12445, 181808, 330457, 351286, 109445, 321612, 260513]
+movie_ids = [299534, 19995, 140607, 299536, 597, 135397, 420818, 24428, 168259, 99861, 284054, 12445, 181808, 330457, 351286, 109445, 321612, 260513]
 
 RAW_DATA_PATH = "data/raw/raw_movies.parquet"
 
 def fetch_movie():
-    client = TMDB(token)
+    client = TMDB()
     movies = []
     for movie_id in movie_ids:
         try:
