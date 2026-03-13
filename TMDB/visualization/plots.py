@@ -45,28 +45,6 @@ def plot_revenue_vs_budget(df):
     
     plt.savefig(os.path.join(FIGURE_DIR, "revenue_vs_budget.png"), bbox_inches="tight")
     plt.close()
-    
-    # ROI Distribution by genre
-    
-    def plot_roi_by_genre(df):
-        _ensure_dir()
-        df = df.dropna(subset=["roi", "genres"])
-        
-        df = df.assign(genre=df["genres"].str.split("|").explode("genre"))
-        
-        genre_roi = df.groupby("genre")["roi"].median().sort_values(ascending=False)
-        plt.figure(figsize=(12, 6))
-        genre_roi.plot(kind="bar")
-        
-        plt.title("Median ROI by Genre")
-        plt.ylabel("ROI")
-        plt.xlabel("Genre")
-        
-        plt.xticks(rotation=45)
-        plt.grid(axis="y")
-        
-        plt.savefig(os.path.join(FIGURE_DIR, "roi_by_genre.png"), bbox_inches="tight")
-        plt.close()
         
 # Popularity vs rating
 def plot_popularity_vs_rating(df):
