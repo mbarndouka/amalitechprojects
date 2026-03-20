@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tmdb-pipeline"
+version = "0.1.0"
+description = "TMDB movie data pipeline with async fetching and analysis"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "pandas",
+    "python-dotenv",
+    "httpx[http2]",
+    "pyarrow",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "black",
+    "flake8",
+    "mypy",
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py314']
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.14"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false

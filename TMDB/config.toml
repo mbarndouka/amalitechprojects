@@ -1,0 +1,41 @@
+[project]
+name = "tmdb-pipeline"
+version = "0.1.0"
+description = "TMDB movie data pipeline with async fetching and analysis"
+author = "Your Name"
+author_email = "your.email@example.com"
+license = "MIT"
+python_version = "3.14"
+
+[dependencies]
+pandas = "*"
+python-dotenv = "*"
+httpx = {extras = ["http2"], version = "*"}
+pyarrow = "*"
+
+[dev-dependencies]
+pytest = "*"
+pytest-asyncio = "*"
+black = "*"
+flake8 = "*"
+mypy = "*"
+
+[paths]
+data_raw = "data/raw"
+data_processed = "data/processed"
+reports = "reports"
+
+[api]
+base_url = "https://api.themoviedb.org/3/movie"
+timeout = 10.0
+max_concurrent = 10
+max_retries = 3
+
+[logging]
+level = "INFO"
+format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+[flake8]
+max_line_length = 100
+exclude = [".git", "__pycache__", "build", "dist", ".env"]
+ignore = ["E203", "W503"]

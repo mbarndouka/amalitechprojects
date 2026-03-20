@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 from ingestion.fetch_movie import fetch_movie
 from processing.clean_movies import clean_movies
 from analysis.kpi_analysis import compute_profit
+from utils.async_runner import _run_coroutine_sync
 from visualization.plots import (
     plot_roi_by_genre,
     plot_revenue_vs_budget,
@@ -32,7 +33,7 @@ def run_pipeline():
     try:
         # Step 1: Fetch data
         logger.info("Step 1: Fetching movie data from TMDB API...")
-        raw_data = fetch_movie()
+        raw_data = _run_coroutine_sync(fetch_movie())
         if raw_data is None or raw_data.empty:
             logger.error("No data fetched. Exiting pipeline.")
             return
