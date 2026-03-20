@@ -67,7 +67,7 @@ def plot_popularity_vs_rating(df):
 # Yearly Box Office Trends
 def plot_yearly_revenue_trends(df):
     _ensure_dir()
-    df = df.dropna(subset=["release_date", "revenue_musd"])
+    df = df.dropna(subset=["release_date", "revenue_musd"]).copy()
     
     df["year"] = pd.to_datetime(df["release_date"]).dt.year
     yearly_revenue = df.groupby("year")["revenue_musd"].sum()
