@@ -1,11 +1,22 @@
+import asyncio
 import logging
 import os
-import asyncio
-from dotenv import load_dotenv
+
 import httpx
+from dotenv import load_dotenv
+
 from utils.async_runner import _run_coroutine_sync
 
-logging.basicConfig(level=logging.INFO)
+# Enhanced Centralized Logging Configuration
+LOG_FILE = "pipeline.log"
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler(LOG_FILE),
+        logging.StreamHandler()
+    ]
+)
 logger = logging.getLogger(__name__)
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
@@ -15,12 +26,23 @@ api_key = os.getenv("API_KEY")
 
 class TMDB:
     def __init__(self):
+        """Initialize with environment variable validation."""
         self.url = base_url
         self.api_key = api_key
-        if not api_key:
-            raise ValueError("API key is required to access TMDB API.")
-        if not base_url:
-            raise ValueError("Base URL is required to access TMDB API.")
+
+        # Validation for production readiness
+        errors = []
+        if not self.api_key:
+            errors.append("API_KEY environment variable is missing.")
+        if not self.url:
+            errors.append("URL environment variable is missing.")
+
+        if errors:
+            error_msg = " Configuration Error: " + " ".join(errors)
+            logger.critical(error_msg)
+            raise EnvironmentError(error_msg)
+
+        logger.info("TMDB API client initialized successfully.")
 
     async def get_movie_with_credits_async(self, client, movie_id):
         """Fetch movie details with embedded credits in a single request."""
@@ -71,4 +93,3 @@ class TMDB:
     def get_movies_batch(self, movie_ids, max_concurrent=4):
         """Synchronous wrapper for batch fetching."""
         return _run_coroutine_sync(self.get_movies_batch_async(movie_ids, max_concurrent))
-            

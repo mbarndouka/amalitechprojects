@@ -13,6 +13,9 @@ dependencies = [
     "python-dotenv",
     "httpx[http2]",
     "pyarrow",
+    "seaborn",
+    "scipy",
+    "matplotlib",
 ]
 
 [project.optional-dependencies]

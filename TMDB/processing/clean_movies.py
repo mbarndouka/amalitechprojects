@@ -1,6 +1,11 @@
-import pandas as pd
-import numpy as np
+import logging
 import os
+
+import numpy as np
+import pandas as pd
+
+# Set up logging for this module
+logger = logging.getLogger(__name__)
 
 DROP_COLS = [
     "adult",
@@ -66,8 +71,10 @@ def clean_movies(df: pd.DataFrame) -> pd.DataFrame:
     - Filtering to only include released movies
     - Reordering columns to a consistent schema
     """
+    logger.info("Starting data cleaning process...")
     df = df.copy()
     
+    initial_rows = len(df)
     df = df.drop(columns=DROP_COLS, errors='ignore')
     
     # Extract names from list/dict payloads where available.
@@ -125,8 +132,12 @@ def clean_movies(df: pd.DataFrame) -> pd.DataFrame:
     #remove rows with unknown id or title
     required_identity_cols = [col for col in ["id", "title"] if col in df.columns]
     if required_identity_cols:
+        before_drop = len(df)
         df = df.dropna(subset=required_identity_cols)
-    
+        dropped = before_drop - len(df)
+        if dropped > 0:
+            logger.warning(f"Dropped {dropped} rows due to missing id/title")
+
     # Keep rows with sufficient populated values relative to available schema.
     if len(df.columns) >= 10:
         df = df[df.count(axis=1) >= 10]
@@ -134,6 +145,7 @@ def clean_movies(df: pd.DataFrame) -> pd.DataFrame:
     # filter released movies
     if "status" in df.columns:
         df = df[df["status"] == "Released"]
+        logger.info(f"Filtered for Released movies only. Rows remaining: {len(df)}")
         df = df.drop(columns=["status"])
     
     # Reorder columns
@@ -145,5 +157,6 @@ def clean_movies(df: pd.DataFrame) -> pd.DataFrame:
     # save cleaned DataFrame
     os.makedirs(os.path.dirname(PROCESS_DATA_PATH), exist_ok=True)
     df.to_parquet(PROCESS_DATA_PATH, index=False)
+    logger.info(f"Cleaning complete. Processed {len(df)} movies (from initial {initial_rows}). Saved to {PROCESS_DATA_PATH}")
 
     return df

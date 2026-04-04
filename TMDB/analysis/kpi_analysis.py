@@ -1,6 +1,8 @@
-import pandas as pd
-import numpy as np
 import re
+
+import numpy as np
+import pandas as pd
+
 
 def compute_profit(df):
     df = df.copy()
@@ -118,6 +120,12 @@ def franchise_vs_standalone(df):
         count_movies=("id", "count")
     ).reset_index()
     return stats
+
+def rank_kpi(df: pd.DataFrame, metric: str, top_n: int = 5, ascending: bool = False) -> pd.DataFrame:
+    """Universal ranking function for any numeric metric."""
+    cols = ["id", "title", metric]
+    available = [c for c in cols if c in df.columns]
+    return df.sort_values(metric, ascending=ascending).head(top_n)[available]
 
 # Most Successful Franchises
 def top_franchises(df, top_n=10):

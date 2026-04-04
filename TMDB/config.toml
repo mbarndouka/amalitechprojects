@@ -34,6 +34,7 @@ max_retries = 3
 [logging]
 level = "INFO"
 format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+log_file = "pipeline.log"
 
 [flake8]
 max_line_length = 100
